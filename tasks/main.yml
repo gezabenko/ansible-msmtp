@@ -51,7 +51,7 @@
   become: true
   ansible.builtin.template:
     src: aliases.j2
-    dest: "{{ msmtp_default__aliases"
+    dest: "{{ msmtp_default__aliases }}"
     owner: "{{ msmtp_default__user }}"
     group: "{{ msmtp_default__group }}"
     mode: "0640"
