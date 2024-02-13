@@ -1,0 +1,62 @@
+---
+# tasks file for ansible-msmtp
+- name: Install packages (Alpine Linux)...
+  become: true
+  community.general.apk:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items: "{{ msmtp_default__package }}"
+  when: ansible_os_family == 'Alpine'
+  tags:
+    - package
+    - install
+    - alpine
+
+- name: Install packages (Ubuntu Linux)...
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    cache_valid_time: 14400
+  with_items: "{{ msmtp_default__package }}"
+  when: ansible_os_family == 'Ubuntu'
+  tags:
+    - package
+    - install
+    - ubuntu
+
+- name: Enable start on boot...
+  become: true
+  ansible.builtin.service:
+    name: "{{ msmtp_default__service }}"
+    enabled: "{{ msmtp_default__service_enabled }}"
+  tags:
+    - service
+
+- name: Config daemon...
+  become: true
+  ansible.builtin.template:
+    src: msmtprc.j2
+    dest: "{{ msmtp_default__config_dir }}/{{ msmtp_default__config_file }}"
+    owner: "{{ msmtp_default__user }}"
+    group: "{{ msmtp_default__group }}"
+    mode: "0640"
+    backup: true
+  notify: restart msmtp
+  tags:
+    - config
+
+- name: Config aliases...
+  become: true
+  ansible.builtin.template:
+    src: aliases.j2
+    dest: "{{ msmtp_default__aliases"
+    owner: "{{ msmtp_default__user }}"
+    group: "{{ msmtp_default__group }}"
+    mode: "0640"
+    backup: true
+  notify: restart msmtp
+  when: msmtp.aliases is defined
+  tags:
+    - config

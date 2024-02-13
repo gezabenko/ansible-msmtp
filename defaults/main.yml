@@ -1,0 +1,14 @@
+---
+# defaults file for ansible-msmtp
+msmtp_default__package:
+  - "msmtp"
+msmtp_default__service: "msmtp"
+msmtp_default__service_enabled: "true"
+msmtp_default__config_dir: "/etc/"
+msmtp_default__config_file: "msmtprc"
+msmtp_default__user: "root"
+msmtp_default__group: "root"
+msmtp_default__aliases: "/etc/aliases"
+
+msmtp__host: "smtp.gmail.com"
+msmtp__port: "587"

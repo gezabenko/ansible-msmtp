@@ -1,0 +1,7 @@
+---
+# handlers file for ansible-msmtp
+- name: restart msmtp
+  become: true
+  ansible.builtin.service:
+    name: "{{ msmtp_default__service }}"
+    state: restarted
